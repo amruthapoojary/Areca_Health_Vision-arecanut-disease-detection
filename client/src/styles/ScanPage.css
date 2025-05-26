@@ -1,0 +1,50 @@
+/* ScanPage.css */
+
+.scan-container {
+  max-width: 400px;
+  margin: 4rem auto;
+  padding: 2rem;
+  border-radius: 12px;
+  background-color: #e6f4ea;  /* light green background */
+  box-shadow: 0 4px 15px rgba(0, 80, 30, 0.1);
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #145214;  /* dark green text */
+}
+
+.scan-container h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  color: #1b4d1b;  /* a stronger green */
+}
+
+.scan-container input[type="file"] {
+  border: 1px solid #91c788;
+  padding: 0.4rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+  margin: 1rem 0;
+}
+
+.scan-container input[type="file"]:hover {
+  border-color: #3a8a31;
+}
+
+.scan-container button {
+  margin-top: 1.5rem;
+  padding: 0.6rem 1.5rem;
+  font-size: 1.1rem;
+  color: white;
+  background-color: #3a8a31; /* medium green */
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.scan-container button:hover {
+  background-color: #2e6c24; /* darker green */
+}
+
