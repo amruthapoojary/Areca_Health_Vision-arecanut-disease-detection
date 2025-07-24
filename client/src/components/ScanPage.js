@@ -56,17 +56,13 @@ function ScanPage() {
     }
   };
 
-  const handleRecommendationClick = () => {
-    alert("🌱 Recommendation:\nApply Bordeaux paste after cleaning infected area.\nAvoid excess moisture.\nUse disease-resistant varieties if possible.");
-  };
-
   const handleLogout = () => {
     navigate('/login');
   };
 
   return (
     <>
-      {/* Logout button outside container (top-right) */}
+      {/* Logout button top-right */}
       <button className="logout-btn" onClick={handleLogout}>
         Logout
       </button>
@@ -83,23 +79,33 @@ function ScanPage() {
           {loading ? "Detecting..." : "Detect Disease"}
         </button>
 
+        {/* ✅ Show Prediction Result */}
         {prediction && (
-          <>
-            <h3 style={{ color: "green", marginTop: "1rem" }}>
-              ✅ Prediction: {prediction}
-            </h3>
-
-            {prediction.includes("diseased") && (
-              <button
-                className="recommend-btn"
-                onClick={handleRecommendationClick}
-              >
-                Show Recommendation
-              </button>
-            )}
-          </>
+          <h3 style={{ marginTop: '1.5rem', color: prediction === 'diseased_stem' ? 'red' : 'green' }}>
+            {prediction === 'diseased_stem' ? '❌ Diseased Stem Detected' : '✅ Stem is Healthy'}
+          </h3>
         )}
 
+        {/* ✅ Show Recommendation Button if Diseased */}
+        {prediction === 'diseased_stem' && (
+          <button
+            onClick={() => navigate('/stem-bleeding-recommendation')}
+            style={{
+              marginTop: '1.5rem',
+              padding: '0.6rem 1.5rem',
+              fontSize: '1.1rem',
+              backgroundColor: '#007bff',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer'
+            }}
+          >
+            Show Recommendation
+          </button>
+        )}
+
+        {/* ❌ Error Display */}
         {error && (
           <p style={{ color: "red", marginTop: "1rem" }}>
             ⚠️ {error}

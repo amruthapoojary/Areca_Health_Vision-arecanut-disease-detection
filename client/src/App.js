@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-
+import StemBleedingRecommendation from './components/StemBleedingRecommendation';
 import Navbar from './components/Navbar';
 import HomePage from './components/HomePage';
 import About from './components/About';
@@ -33,6 +33,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/scan" element={<ScanPage />} />
+          <Route path="/stem-bleeding-recommendation" element={<StemBleedingRecommendation />} />
         </Routes>
       </Layout>
     </Router>
