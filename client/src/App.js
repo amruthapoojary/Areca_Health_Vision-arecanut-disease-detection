@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import StemBleedingRecommendation from './components/StemBleedingRecommendation';
+import FruitRotRecommendation from './components/FruitRotRecommendation';  // ✅ Import added
 import Navbar from './components/Navbar';
 import HomePage from './components/HomePage';
 import About from './components/About';
@@ -11,7 +12,11 @@ import ScanPage from './components/ScanPage';
 
 function Layout({ children }) {
   const location = useLocation();
-  const hideNavbar = location.pathname === '/scan';
+
+  // List of paths where navbar should be hidden
+  const hideNavbarPaths = ['/scan', "/stem-bleeding-recommendation", "/fruit-rot-recommendation"];
+
+  const hideNavbar = hideNavbarPaths.includes(location.pathname);
 
   return (
     <>
@@ -20,6 +25,7 @@ function Layout({ children }) {
     </>
   );
 }
+
 
 function App() {
   return (
@@ -34,6 +40,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/scan" element={<ScanPage />} />
           <Route path="/stem-bleeding-recommendation" element={<StemBleedingRecommendation />} />
+          <Route path="/fruit-rot-recommendation" element={<FruitRotRecommendation />} />  {/* ✅ New Route */}
         </Routes>
       </Layout>
     </Router>

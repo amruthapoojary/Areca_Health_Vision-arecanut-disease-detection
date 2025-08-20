@@ -1,9 +1,31 @@
 import React from "react";
 import '../styles/Recommendation.css';  // Ensure this CSS file exists
-
+import { useNavigate } from "react-router-dom";
 function StemBleedingRecommendation() {
+  const navigate = useNavigate();
   return (
-    <div className="recommendation-container">
+ <div className="recommendation-container" style={{ padding: "20px" }}>
+      {/* ✅ Floating Green Button (right side) */}
+      <button
+        style={{
+          position: "fixed",
+          top: "20px",
+          right: "20px",
+          backgroundColor: "green",
+          color: "white",
+          border: "none",
+          padding: "10px 20px",
+          borderRadius: "8px",
+          cursor: "pointer",
+          fontSize: "16px",
+          fontWeight: "bold",
+          boxShadow: "0 4px 6px rgba(0,0,0,0.2)"
+        }}
+        onClick={() => navigate("/scan")} // 👈 change path if you want Scan/Logout
+      >
+        Back
+      </button>
+      
       <h2>Stem Bleeding Disease – Recommendation</h2>
       <p className="disease-description">
         Stem bleeding is a serious fungal disease in arecanut caused by <em>Ganoderma lucidum</em>.

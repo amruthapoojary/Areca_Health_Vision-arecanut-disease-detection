@@ -7,6 +7,7 @@ function ScanPage() {
   const [prediction, setPrediction] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [diseaseType, setDiseaseType] = useState('stem_bleeding'); // default
   const navigate = useNavigate();
 
   const handleFileChange = (event) => {
@@ -23,6 +24,7 @@ function ScanPage() {
 
     const formData = new FormData();
     formData.append("file", selectedFile);
+    formData.append("disease_type", diseaseType);
 
     try {
       setLoading(true);
@@ -60,6 +62,21 @@ function ScanPage() {
     navigate('/login');
   };
 
+  // ✅ Decide result message
+  const getResultMessage = () => {
+    if (diseaseType === "stem_bleeding") {
+      if (prediction === "diseased_stem") return "❌ Diseased Stem Detected";
+      if (prediction === "healthy_stem") return "✅ Stem is Healthy";
+    } else if (diseaseType === "fruit_rot") {
+      if (prediction === "diseased_fruit") return "❌ Diseased Fruit Detected";
+      if (prediction === "healthy_fruit") return "✅ Fruit is Healthy";
+    }
+    return "";
+  };
+
+  // ✅ Decide if diseased → show recommendation button
+  const isDiseased = prediction === "diseased_stem" || prediction === "diseased_fruit";
+
   return (
     <>
       {/* Logout button top-right */}
@@ -69,41 +86,76 @@ function ScanPage() {
 
       <div className="scan-container">
         <h2>📸 Scan Arecanut Image</h2>
+
+        {/* Dropdown to select disease type */}
+        <label style={{ marginBottom: "0.5rem", display: "block" }}>
+          Select Disease Type:
+        </label>
+        <select
+          value={diseaseType}
+          onChange={(e) => setDiseaseType(e.target.value)}
+          style={{
+            padding: "0.5rem",
+            borderRadius: "6px",
+            marginBottom: "1rem"
+          }}
+        >
+          <option value="stem_bleeding">Stem Bleeding</option>
+          <option value="fruit_rot">Fruit Rot</option>
+        </select>
+
+        <br />
+
+        {/* File upload */}
         <input
           type="file"
           accept="image/*"
           onChange={handleFileChange}
         />
         <br />
+
+        {/* Detect button */}
         <button onClick={handleDetectClick} disabled={loading}>
           {loading ? "Detecting..." : "Detect Disease"}
         </button>
 
         {/* ✅ Show Prediction Result */}
         {prediction && (
-          <h3 style={{ marginTop: '1.5rem', color: prediction === 'diseased_stem' ? 'red' : 'green' }}>
-            {prediction === 'diseased_stem' ? '❌ Diseased Stem Detected' : '✅ Stem is Healthy'}
+          <h3
+            style={{
+              marginTop: "1.5rem",
+              color: isDiseased ? "red" : "green"
+            }}
+          >
+            {getResultMessage()}
           </h3>
         )}
 
         {/* ✅ Show Recommendation Button if Diseased */}
-        {prediction === 'diseased_stem' && (
+        {isDiseased && (
           <button
-            onClick={() => navigate('/stem-bleeding-recommendation')}
+            onClick={() =>
+              navigate(
+                diseaseType === "stem_bleeding"
+                  ? "/stem-bleeding-recommendation"
+                  : "/fruit-rot-recommendation"
+              )
+            }
             style={{
-              marginTop: '1.5rem',
-              padding: '0.6rem 1.5rem',
-              fontSize: '1.1rem',
-              backgroundColor: '#007bff',
-              color: 'white',
-              border: 'none',
-              borderRadius: '8px',
-              cursor: 'pointer'
+              marginTop: "1.5rem",
+              padding: "0.6rem 1.5rem",
+              fontSize: "1.1rem",
+              backgroundColor: "#28a745", // ✅ Green instead of blue
+              color: "white",
+              border: "none",
+              borderRadius: "8px",
+              cursor: "pointer"
             }}
           >
             Show Recommendation
           </button>
         )}
+
 
         {/* ❌ Error Display */}
         {error && (
