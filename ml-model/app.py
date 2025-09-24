@@ -9,7 +9,7 @@ app = Flask(__name__)
 CORS(app)
 
 # -------------------------------
-# Load both trained models
+# Load trained models
 # -------------------------------
 models = {}
 
@@ -22,6 +22,11 @@ models['stem_bleeding'].eval()
 models['fruit_rot'] = timm.create_model('deit3_small_patch16_224', pretrained=False, num_classes=2)
 models['fruit_rot'].load_state_dict(torch.load('model/fruit_rot_deit1.pth', map_location=torch.device('cpu')))
 models['fruit_rot'].eval()
+
+# ✅ Yellow Leaf Model (newly added)
+models['yellow_leaf'] = timm.create_model('deit3_small_patch16_224', pretrained=False, num_classes=2)
+models['yellow_leaf'].load_state_dict(torch.load('model/yellow_leaf_model.pth', map_location=torch.device('cpu')))
+models['yellow_leaf'].eval()
 
 # -------------------------------
 # Image Preprocessing
@@ -38,7 +43,8 @@ transform = transforms.Compose([
 # -------------------------------
 CLASS_LABELS = {
     "stem_bleeding": ['diseased_stem', 'healthy_stem'],
-    "fruit_rot": ['diseased_fruit', 'healthy_fruit']
+    "fruit_rot": ['diseased_fruit', 'healthy_fruit'],
+     "yellow_leaf": ['healthy_leaf', 'diseased_leaf'] # ✅ Added
 }
 
 # -------------------------------
@@ -50,7 +56,7 @@ def predict():
         return jsonify({'error': 'No file uploaded'}), 400
     
     if 'disease_type' not in request.form:
-        return jsonify({'error': 'Missing disease_type (stem_bleeding or fruit_rot)'}), 400
+        return jsonify({'error': 'Missing disease_type (stem_bleeding, fruit_rot, yellow_leaf)'}), 400
 
     disease_type = request.form['disease_type']
 

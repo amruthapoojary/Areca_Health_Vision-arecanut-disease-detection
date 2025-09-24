@@ -70,12 +70,18 @@ function ScanPage() {
     } else if (diseaseType === "fruit_rot") {
       if (prediction === "diseased_fruit") return "❌ Diseased Fruit Detected";
       if (prediction === "healthy_fruit") return "✅ Fruit is Healthy";
+    } else if (diseaseType === "yellow_leaf") {
+      if (prediction === "diseased_leaf") return "❌ Diseased Leaf Detected (Yellow Leaf)";
+      if (prediction === "healthy_leaf") return "✅ Leaf is Healthy";
     }
     return "";
   };
 
   // ✅ Decide if diseased → show recommendation button
-  const isDiseased = prediction === "diseased_stem" || prediction === "diseased_fruit";
+  const isDiseased =
+    prediction === "diseased_stem" ||
+    prediction === "diseased_fruit" ||
+    prediction === "diseased_leaf";
 
   return (
     <>
@@ -100,8 +106,9 @@ function ScanPage() {
             marginBottom: "1rem"
           }}
         >
-          <option value="stem_bleeding">Stem Bleeding</option>
-          <option value="fruit_rot">Fruit Rot</option>
+          <option value="stem_bleeding">Stem</option>
+          <option value="fruit_rot">Fruit</option>
+          <option value="yellow_leaf">Leaf</option>
         </select>
 
         <br />
@@ -138,7 +145,9 @@ function ScanPage() {
               navigate(
                 diseaseType === "stem_bleeding"
                   ? "/stem-bleeding-recommendation"
-                  : "/fruit-rot-recommendation"
+                  : diseaseType === "fruit_rot"
+                  ? "/fruit-rot-recommendation"
+                  : "/yellow-leaf-recommendation"
               )
             }
             style={{
@@ -155,7 +164,6 @@ function ScanPage() {
             Show Recommendation
           </button>
         )}
-
 
         {/* ❌ Error Display */}
         {error && (
