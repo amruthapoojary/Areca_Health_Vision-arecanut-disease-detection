@@ -1,26 +1,24 @@
-from flask import Flask, request
-import os
-from datetime import datetime
+# D:\user\Amrutha023\arecanut-disease-detection\flask\app.py
+from flask import Flask, request, jsonify
+import os, time
 
 app = Flask(__name__)
-
-# Folder to save images on C: drive
-SAVE_FOLDER = "C:/Arecanut_Images"
-os.makedirs(SAVE_FOLDER, exist_ok=True)  # Create folder if it doesn't exist
+SAVE_DIR = r"D:\user\Amrutha023\arecanut-disease-detection\flask\images"
+os.makedirs(SAVE_DIR, exist_ok=True)
 
 @app.route('/upload', methods=['POST'])
 def upload():
-    if 'file' not in request.files:
-        return "No file uploaded", 400
+    data = request.get_data()
+    if not data:
+        return jsonify({'status':'no data'}), 400
+    filename = os.path.join(SAVE_DIR, f"img_{int(time.time())}.jpg")
+    try:
+        with open(filename, 'wb') as f:
+            f.write(data)
+        return jsonify({'status':'saved','path':filename}), 200
+    except Exception as e:
+        return jsonify({'status':'error','error':str(e)}), 500
 
-    file = request.files['file']
-
-    # Save with timestamp to avoid overwriting
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = f"{SAVE_FOLDER}/image_{timestamp}.jpg"
-    file.save(filename)
-
-    return f"Image saved as {filename}", 200
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5003)
+if __name__ == '__main__':
+    # Run on all interfaces so the ESP32 can reach it: http://<your-laptop-ip>:5003/upload
+    app.run(host='0.0.0.0', port=5003, debug=False)

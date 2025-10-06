@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import '../styles/ScanPage.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -62,49 +62,65 @@ function ScanPage() {
     navigate('/login');
   };
 
-  // ✅ Decide result message
+  // Decide result message
   const getResultMessage = () => {
     if (diseaseType === "stem_bleeding") {
-      if (prediction === "diseased_stem") return "❌ Diseased Stem Detected";
-      if (prediction === "healthy_stem") return "✅ Stem is Healthy";
+      if (prediction === "diseased_stem") return "Diseased Stem Detected";
+      if (prediction === "healthy_stem") return "Stem is Healthy";
     } else if (diseaseType === "fruit_rot") {
-      if (prediction === "diseased_fruit") return "❌ Diseased Fruit Detected";
-      if (prediction === "healthy_fruit") return "✅ Fruit is Healthy";
+      if (prediction === "diseased_fruit") return "Diseased Fruit Detected";
+      if (prediction === "healthy_fruit") return "Fruit is Healthy";
     } else if (diseaseType === "yellow_leaf") {
-      if (prediction === "diseased_leaf") return "❌ Diseased Leaf Detected (Yellow Leaf)";
-      if (prediction === "healthy_leaf") return "✅ Leaf is Healthy";
+      if (prediction === "diseased_leaf") return "Diseased Leaf Detected";
+      if (prediction === "healthy_leaf") return "Leaf is Healthy";
     }
     return "";
   };
 
-  // ✅ Decide if diseased → show recommendation button
+  // Decide if diseased → show recommendation button
   const isDiseased =
     prediction === "diseased_stem" ||
     prediction === "diseased_fruit" ||
     prediction === "diseased_leaf";
 
+  // -----------------------------
+  // Auto-play audio for detected disease
+  // -----------------------------
+  useEffect(() => {
+    if (!prediction) return;
+
+    // Fetch TTS audio from backend
+    fetch("http://localhost:5001/recommendation_audio", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      // ✅ Send full prediction key
+      body: JSON.stringify({ disease_type: prediction })
+    })
+      .then(res => res.blob())
+      .then(blob => {
+        const url = URL.createObjectURL(blob);
+        const audio = new Audio(url);
+        audio.play();
+      })
+      .catch(err => console.error("Error playing audio:", err));
+  }, [prediction]);
+
   return (
     <>
-      {/* Logout button top-right */}
       <button className="logout-btn" onClick={handleLogout}>
         Logout
       </button>
 
       <div className="scan-container">
-        <h2>📸 Scan Arecanut Image</h2>
+        <h2>Scan Arecanut Image</h2>
 
-        {/* Dropdown to select disease type */}
         <label style={{ marginBottom: "0.5rem", display: "block" }}>
           Select Disease Type:
         </label>
         <select
           value={diseaseType}
           onChange={(e) => setDiseaseType(e.target.value)}
-          style={{
-            padding: "0.5rem",
-            borderRadius: "6px",
-            marginBottom: "1rem"
-          }}
+          style={{ padding: "0.5rem", borderRadius: "6px", marginBottom: "1rem" }}
         >
           <option value="stem_bleeding">Stem</option>
           <option value="fruit_rot">Fruit</option>
@@ -112,33 +128,18 @@ function ScanPage() {
         </select>
 
         <br />
-
-        {/* File upload */}
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-        />
+        <input type="file" accept="image/*" onChange={handleFileChange} />
         <br />
-
-        {/* Detect button */}
         <button onClick={handleDetectClick} disabled={loading}>
           {loading ? "Detecting..." : "Detect Disease"}
         </button>
 
-        {/* ✅ Show Prediction Result */}
         {prediction && (
-          <h3
-            style={{
-              marginTop: "1.5rem",
-              color: isDiseased ? "red" : "green"
-            }}
-          >
+          <h3 style={{ marginTop: "1.5rem", color: isDiseased ? "red" : "green" }}>
             {getResultMessage()}
           </h3>
         )}
 
-        {/* ✅ Show Recommendation Button if Diseased */}
         {isDiseased && (
           <button
             onClick={() =>
@@ -154,7 +155,7 @@ function ScanPage() {
               marginTop: "1.5rem",
               padding: "0.6rem 1.5rem",
               fontSize: "1.1rem",
-              backgroundColor: "#28a745", // ✅ Green instead of blue
+              backgroundColor: "#28a745",
               color: "white",
               border: "none",
               borderRadius: "8px",
@@ -165,12 +166,7 @@ function ScanPage() {
           </button>
         )}
 
-        {/* ❌ Error Display */}
-        {error && (
-          <p style={{ color: "red", marginTop: "1rem" }}>
-            ⚠️ {error}
-          </p>
-        )}
+        {error && <p style={{ color: "red", marginTop: "1rem" }}>⚠️ {error}</p>}
       </div>
     </>
   );

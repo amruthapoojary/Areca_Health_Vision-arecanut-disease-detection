@@ -35,7 +35,7 @@ const diseases = [
 function DiseasesPage() {
   return (
     <div className="diseases-container">
-      <h2>🌿 Common Arecanut Diseases</h2>
+      <h2>Common Arecanut Diseases</h2>
       <div className="disease-grid">
         {diseases.map((disease) => (
           <div key={disease.id} className="disease-card">
