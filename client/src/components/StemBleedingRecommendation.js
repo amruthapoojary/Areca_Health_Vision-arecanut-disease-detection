@@ -110,10 +110,33 @@ function StemBleedingRecommendation() {
           <p>Apply directly to the infected area once every week.</p>
           <a href="https://katyayanikrishidirect.com/products/bordeaux-mixture-fungicide" target="_blank" rel="noopener noreferrer">Buy on Kyatayani</a>
         </div>
+        {/* Card 4 */}
+        <div className="recommendation-card">
+          <img src="https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcSsdVWVT98gXaMC7myVnbvl9QTsrESpai5UJjaypIn7wKL6e4IfY8_ofwW1QeFyN-_wvNn7HlIoUIO3yLQBTwb8J-KeAuvmXSgrShixoS0JHP9KaW9iYeYv" alt="Trichoderma viride" />
+          <h3>Trichoderma viride</h3>
+          <p>Mix in FYM and apply near roots monthly.</p>
+          <a href="https://www.flipkart.com/wesfra-bio-organic-trichoderma-viride-liquid-manure/p/itm4be7010a87146?pid=SMNGD6BKXWUZ4GFA&lid=LSTSMNGD6BKXWUZ4GFALPQ858&marketplace=FLIPKART&cmpid=content_soil-manure_8965229628_gmc" target="_blank" rel="noopener noreferrer">Buy on Flipkart</a>
+        </div>
 
-        {/* Remaining Cards... */}
+        {/* Card 5 */}
+        <div className="recommendation-card">
+          <img src="https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcRmxivcPziIwgNrz9KAkunjT-0A1q5N7aHc8WECfoFAP2Uw1TwTGA1LwOxS_l1_7AjwA7hC_sMwpw0CfXqpUMT8VWDETqXWtDigy2su1QY5RezcoWH0W-qyAg" alt="Neem Cake" />
+          <h3>Neem Cake</h3>
+          <p>Use 250g per plant twice a year to prevent recurrence.</p>
+          <a href="https://plantcare.co.in/product/plant-care-organic-neem-cake/?attribute_weight=500+GRAMS&srsltid=AfmBOopnM5h086FEsfYgeLvLNeE7u96ziiF_R-V72UK_6NyrN_pH-faoUTA" target="_blank" rel="noopener noreferrer">Buy on Plantcare</a>
+        </div>
+
+        {/* Card 6 */}
+        <div className="recommendation-card">
+          <img src="https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcQbcBideIRtNxayAGA2B7KWIS8QJ2Ddn-UiFerA7PCTeHtcC4Ha621WZ7pgVrUzz3-7LlYJe5PK5Vc5TJYf0k4ZJ_qpdC9v3AwBqT0V9lGPLkuLhVDjCoOb" alt="Fungicide Mix" />
+          <h3>Fungicide Mix Combo</h3>
+          <p>Use as per label. Suitable for broad treatment.</p>
+          <a href="https://www.meesho.com/pack-of-100-gm-carbendazim-12-mancozeb-63-wp-a-proven-classic-fungicide-with-systemic-contact-action/p/4lpu5o?utm_source=google&utm_medium=cpc&utm_campaign=gmc&srsltid=AfmBOop1Jqm94nj3RdbYmhTY75fRJbgb_S-1GTvWVGyoPAvbRVFubRbn5G8" target="_blank" rel="noopener noreferrer">Buy on Flipkart</a>
+        </div>
       </div>
     </div>
+      
+    
   );
 }
 

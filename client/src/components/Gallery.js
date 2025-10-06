@@ -30,7 +30,7 @@ const diseases = [
 function Gallery() {
   return (
     <div className="gallery-container">
-      <h2>🌿 Arecanut Disease Gallery</h2>
+      <h2>Arecanut Disease Gallery</h2>
       <div className="gallery-grid">
         {diseases.map((disease) => (
           <div key={disease.id} className="gallery-card">
