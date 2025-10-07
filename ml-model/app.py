@@ -100,9 +100,9 @@ def recommendation_audio():
     
     # ✅ Simple messages for each prediction
     text_dict = {
-        'diseased_stem': "The stem has stem bleeding disease.",
-    'diseased_fruit': "The fruits have fruit rot disease.",
-    'diseased_leaf': "The leaves have yellow leaf disease.",
+    'diseased_stem': "Stem bleeding is affecting your plant's stem.",
+    'diseased_fruit': "Fruit rot has appeared on your arecanuts.",
+    'diseased_leaf': "Yellow leaf disease is present on the leaves.",
     'healthy_stem': "The stem looks strong and healthy.",
     'healthy_fruit': "The fruits look healthy and fine.",
     'healthy_leaf': "The leaves look green and healthy."
