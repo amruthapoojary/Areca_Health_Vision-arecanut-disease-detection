@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import '../styles/ScanPage.css';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';  // ✅ Added for translation
 
 function ScanPage() {
+  const { t } = useTranslation(); // ✅ translation hook
   const [selectedFile, setSelectedFile] = useState(null);
   const [prediction, setPrediction] = useState('');
   const [error, setError] = useState('');
@@ -18,7 +20,7 @@ function ScanPage() {
 
   const handleDetectClick = async () => {
     if (!selectedFile) {
-      alert("Please select an image first.");
+      alert(t("Please select an image first."));
       return;
     }
 
@@ -39,7 +41,7 @@ function ScanPage() {
       if (!response.ok) {
         const errorText = await response.text();
         console.error("Flask error:", errorText);
-        setError("Server error: Could not process the image.");
+        setError(t("Server error: Could not process the image."));
         return;
       }
 
@@ -48,11 +50,11 @@ function ScanPage() {
       if (data.prediction) {
         setPrediction(data.prediction);
       } else {
-        setError("Prediction failed. No prediction returned.");
+        setError(t("Prediction failed. No prediction returned."));
       }
     } catch (err) {
       console.error("Error during prediction:", err);
-      setError("Could not connect to the Flask server.");
+      setError(t("Could not connect to the Flask server."));
     } finally {
       setLoading(false);
     }
@@ -65,14 +67,14 @@ function ScanPage() {
   // Decide result message
   const getResultMessage = () => {
     if (diseaseType === "stem_bleeding") {
-      if (prediction === "diseased_stem") return "Diseased Stem Detected";
-      if (prediction === "healthy_stem") return "Stem is Healthy";
+      if (prediction === "diseased_stem") return t("Diseased Stem Detected");
+      if (prediction === "healthy_stem") return t("Stem is Healthy");
     } else if (diseaseType === "fruit_rot") {
-      if (prediction === "diseased_fruit") return "Diseased Fruit Detected";
-      if (prediction === "healthy_fruit") return "Fruit is Healthy";
+      if (prediction === "diseased_fruit") return t("Diseased Fruit Detected");
+      if (prediction === "healthy_fruit") return t("Fruit is Healthy");
     } else if (diseaseType === "yellow_leaf") {
-      if (prediction === "diseased_leaf") return "Diseased Leaf Detected";
-      if (prediction === "healthy_leaf") return "Leaf is Healthy";
+      if (prediction === "diseased_leaf") return t("Diseased Leaf Detected");
+      if (prediction === "healthy_leaf") return t("Leaf is Healthy");
     }
     return "";
   };
@@ -108,30 +110,30 @@ function ScanPage() {
   return (
     <>
       <button className="logout-btn" onClick={handleLogout}>
-        Logout
+        {t("Logout")}
       </button>
 
       <div className="scan-container">
-        <h2>Scan Arecanut Image</h2>
+        <h2>{t("Scan Arecanut Image")}</h2>
 
         <label style={{ marginBottom: "0.5rem", display: "block" }}>
-          Select Disease Type:
+          {t("Select Disease Type:")}
         </label>
         <select
           value={diseaseType}
           onChange={(e) => setDiseaseType(e.target.value)}
           style={{ padding: "0.5rem", borderRadius: "6px", marginBottom: "1rem" }}
         >
-          <option value="stem_bleeding">Stem</option>
-          <option value="fruit_rot">Fruit</option>
-          <option value="yellow_leaf">Leaf</option>
+          <option value="stem_bleeding">{t("Stem")}</option>
+          <option value="fruit_rot">{t("Fruit")}</option>
+          <option value="yellow_leaf">{t("Leaf")}</option>
         </select>
 
         <br />
         <input type="file" accept="image/*" onChange={handleFileChange} />
         <br />
         <button onClick={handleDetectClick} disabled={loading}>
-          {loading ? "Detecting..." : "Detect Disease"}
+          {loading ? t("Detecting") : t("Detect Disease")}
         </button>
 
         {prediction && (
@@ -162,11 +164,11 @@ function ScanPage() {
               cursor: "pointer"
             }}
           >
-            Show Recommendation
+            {t("Show Recommendation")}
           </button>
         )}
 
-        {error && <p style={{ color: "red", marginTop: "1rem" }}>⚠️ {error}</p>}
+        {error && <p style={{ color: "red", marginTop: "1rem" }}>⚠ {error}</p>}
       </div>
     </>
   );

@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/Signup.css';
+import { useTranslation } from "react-i18next";
+import LanguageSelector from './LanguageSelector';
 
 function Signup() {
+    const { t } = useTranslation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -36,10 +39,11 @@ function Signup() {
     return (
         <div className="d-flex justify-content-center align-items-center signup-container" style={{ height: '100vh' }}>
             <div className="signup-form p-4">
+                
                 <form onSubmit={handleSubmit}>
-                    <h2 className="text-center mb-4 text-white">Sign Up</h2>
+                    <h2 className="text-center mb-4 text-white">{t("Sign Up")}</h2>
                     <div className="form-group mb-3">
-                        <label htmlFor="email" className="text-white">Email</label>
+                        <label htmlFor="email" className="text-white">{t("Email")}</label>
                         <input
                             type="email"
                             placeholder="Enter Email"
@@ -50,7 +54,7 @@ function Signup() {
                         />
                     </div>
                     <div className="form-group mb-3">
-                        <label htmlFor="password" className="text-white">Password</label>
+                        <label htmlFor="password" className="text-white">{t("Password")}</label>
                         <input
                             type="password"
                             placeholder="Enter Password"
@@ -61,10 +65,10 @@ function Signup() {
                         />
                     </div>
                     <button className="btn btn-success w-100" type="submit">
-                        SIGN UP
+                        {t("SIGN UP")}
                     </button>
                     <p className="text-center mt-3 text-white">
-                        Already have an account? <Link to="/login" className="text-white">Login</Link>
+                        {t("Already have an account?")} <Link to="/login" className="text-white">{t("Login")}</Link>
                     </p>
                 </form>
             </div>
@@ -73,4 +77,3 @@ function Signup() {
 }
 
 export default Signup;
-

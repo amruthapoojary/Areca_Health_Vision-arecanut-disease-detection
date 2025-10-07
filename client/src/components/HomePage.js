@@ -3,11 +3,16 @@ import React from "react";
 import Navbar from './Navbar';
 import Carousel from './Carousel';
 import Footer from './Footer';
-
+import { useTranslation } from "react-i18next";
+import LanguageSelector from "./LanguageSelector";
 
 function HomePage() {
+    
+  const { t } = useTranslation();
   return (
+   
     <div>
+       
       <Carousel />
       <Footer />
     </div>

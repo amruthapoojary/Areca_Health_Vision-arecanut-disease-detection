@@ -1,19 +1,20 @@
 import React from 'react';
 import "../styles/App.css";
+import { useTranslation } from "react-i18next";
 
 const About = () => {
+  const { t } = useTranslation();
   return (
     <div className="about-page">
       <header className="about-header">
-        <h1>About Us</h1>
+        <h1>{t("about_title")}</h1>
+        
       </header>
 
       <section className="about-content">
         <div className="about-description">
-          <h2>Arecanut Disease Detection System</h2>
-          <p style={{ textAlign: "justify" }}>
-            Our Arecanut Disease Detection System is an AI-powered web platform designed to assist farmers, researchers, and agricultural experts in identifying and managing diseases affecting arecanut crops. By utilizing advanced image processing, deep learning, and explainable AI techniques, our system detects diseases at various stages and suggests appropriate treatments to help minimize crop loss and ensure better productivity.
-          </p>
+          <h2>{t("about_topic")}</h2>
+          <p style={{ textAlign: "justify" }}>{t("about_description")} </p>
         </div>
         <div className="about-image">
           <img
@@ -24,26 +25,26 @@ const About = () => {
       </section>
 
       <section className="about-creative-features">
-        <h2>Features of Our System</h2>
+        <h2>{t("features_title")}</h2>
         <div className="feature-item">
           <i className="fas fa-microscope"></i>
-          <h3>Real-time Disease Detection</h3>
-          <p>Upload images of arecanut plants and get instant disease identification using our AI model.</p>
+          <h3>{t("feature_1")}</h3>
+          <p>{t("feature_1_desc")}</p>
         </div>
         <div className="feature-item">
           <i className="fas fa-notes-medical"></i>
-          <h3>Treatment Suggestions</h3>
-          <p>Get recommended pesticides, fungicides, and preventive measures based on the identified disease.</p>
+          <h3>{t("feature_2")}</h3>
+          <p>{t("feature_2_desc")}</p>
         </div>
         <div className="feature-item">
           <i className="fas fa-eye"></i>
-          <h3>Explainable AI </h3>
-          <p>Development of a Smart Hat integrated with sensors and a camera, along with a web application, to detect arecanut diseases .</p>
+          <h3>{t("feature_3")} </h3>
+          <p>{t("feature_3_desc")}</p>
         </div>
         <div className="feature-item">
           <i className="fas fa-database"></i>
-          <h3>Disease Knowledge Base</h3>
-          <p>Explore a static gallery of common arecanut diseases and learn how to recognize and treat them.</p>
+          <h3>{t("feature_4")}</h3>
+          <p>{t("feature_4_desc")}</p>
         </div>
       </section>
     </div>

@@ -1,43 +1,44 @@
 import React from "react";
 import "../styles/Gallery.css";
+import { useTranslation } from "react-i18next";
 
 const diseases = [
   {
     id: 1,
-    name: "Fruit Rot",
+    nameKey: "disease1_name",
     image: "/Picture4.png",
-    description: "This disease affects the fruit causing it to rot and fall prematurely.",
-    treatment: "Apply Bordeaux mixture (1%) or copper oxychloride (0.25%)."
+    descriptionKey: "disease1_desc",
+    treatmentKey: "disease1_treatment"
   },
-  
   {
     id: 2,
-    name: "Yellow leaf disease",
+    nameKey: "disease2_name",
     image: "/Picture2.png",
-
-    description: "Irregular yellow lesions develop on leaves.",
-    treatment: "Spray fungicides like carbendazim or mancozeb at 0.2% concentration."
+    descriptionKey: "disease2_desc",
+    treatmentKey: "disease2_treatment"
   },
   {
     id: 3,
-    name: "Stem Bleeding",
+    nameKey: "disease3_name",
     image: "/Picture3.png",
-    description: "Dark brown patches and bleeding on stem surface.",
-    treatment: "Scrape the affected area and apply Bordeaux paste or coal tar."
+    descriptionKey: "disease3_desc",
+    treatmentKey: "disease3_treatment"
   }
 ];
 
 function Gallery() {
+  const { t } = useTranslation();
+
   return (
     <div className="gallery-container">
-      <h2>Arecanut Disease Gallery</h2>
+      <h2>{t("gallery_title")}</h2>
       <div className="gallery-grid">
         {diseases.map((disease) => (
           <div key={disease.id} className="gallery-card">
-            <img src={disease.image} alt={disease.name} />
-            <h3>{disease.name}</h3>
-            <p>{disease.description}</p>
-            <strong>Treatment: {disease.treatment}</strong>
+            <img src={disease.image} alt={t(disease.nameKey)} />
+            <h3>{t(disease.nameKey)}</h3>
+            <p>{t(disease.descriptionKey)}</p>
+            <strong>{t("Treatment")}: {t(disease.treatmentKey)}</strong>
           </div>
         ))}
       </div>

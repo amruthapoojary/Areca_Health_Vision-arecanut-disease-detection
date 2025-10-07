@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const Carousel = () => {
+  const { t } = useTranslation();
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const intervalRef = useRef(null);
@@ -22,12 +24,11 @@ const Carousel = () => {
           boxShadow: "0 0 15px rgba(0, 0, 0, 0.8)",
           backdropFilter: "blur(3px)",
         }}>
-          <h3>Unlock Smart Arecanut Disease Detection</h3>
+          <h3>{t("feature_1")}</h3>
           <p>
-            Discover how to optimize crop protection and yield with advanced AI-based diagnostics.
-          </p>
+            {t("feature_1_desc")}</p>
           <button className="carousel-btn" onClick={() => navigate("/login")}>
-            Learn More
+           {t("feature_2")}
           </button>
         </div>
       ),
@@ -45,10 +46,9 @@ const Carousel = () => {
           boxShadow: "0 0 15px rgba(0, 0, 0, 0.8)",
           backdropFilter: "blur(3px)",
         }}>
-          <h3>Disease Detection & Recommendation</h3>
+          <h3>{t("feature_3")}</h3>
           <p>
-            Use a smart wearable or your mobile to capture plant symptoms for real-time diagnosis.
-
+            {t("feature_3_desc")}
           </p>
         </div>
       ),
@@ -66,10 +66,9 @@ const Carousel = () => {
           boxShadow: "0 0 15px rgba(0, 0, 0, 0.8)",
           backdropFilter: "blur(3px)",
         }}>
-          <h3>Smart Hat / Mobile Photo Upload</h3>
+          <h3>{t("feature_4")}</h3>
           <p>
-            Upload images of arecanut plants and get expert treatment suggestions instantly.
-          </p>
+            {t("feature_4_desc")} </p>
         </div>
       ),
     },
@@ -113,7 +112,7 @@ const Carousel = () => {
         data-bs-slide="prev"
       >
         <span className="carousel-control-prev-icon" />
-        <span className="visually-hidden">Previous</span>
+        <span className="visually-hidden">{t("Previous")}</span>
       </button>
       <button
         className="carousel-control-next"
@@ -122,7 +121,7 @@ const Carousel = () => {
         data-bs-slide="next"
       >
         <span className="carousel-control-next-icon" />
-        <span className="visually-hidden">Next</span>
+        <span className="visually-hidden">{t("Next")}</span>
       </button>
     </div>
   );

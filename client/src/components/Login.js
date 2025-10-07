@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/Login.css';
+import { useTranslation } from "react-i18next";
+import LanguageSelector from "./LanguageSelector";
 
 function Login({ onLoginSuccess }) {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
@@ -36,10 +39,11 @@ function Login({ onLoginSuccess }) {
   return (
     <div className="d-flex justify-content-center align-items-center login-container" style={{ height: '100vh' }}>
       <div className="login-form p-4">
+       
         <form onSubmit={handleSubmit}>
-          <h2 className="text-center mb-4 text-white">Login</h2>
+          <h2 className="text-center mb-4 text-white">{t("Login")}</h2>
           <div className="form-group mb-3">
-            <label htmlFor="email" className="text-white">Email</label>
+            <label htmlFor="email" className="text-white">{t("Email")}</label>
             <input
               type="email"
               placeholder="Enter Email"
@@ -50,7 +54,7 @@ function Login({ onLoginSuccess }) {
             />
           </div>
           <div className="form-group mb-3">
-            <label htmlFor="password" className="text-white">Password</label>
+            <label htmlFor="password" className="text-white">{t("Password")}</label>
             <input
               type="password"
               placeholder="Enter Password"
@@ -61,10 +65,10 @@ function Login({ onLoginSuccess }) {
             />
           </div>
           <button className="btn btn-success w-100" type="submit">
-            LOGIN
+              {t("LOGIN")}
           </button>
           <p className="text-center mt-3 text-white">
-            Don't have an account? <Link to="/signup" className="text-white">Sign up</Link>
+            {t("Don't have an account?")} <Link to="/signup" className="text-white">{t("Sign up")}</Link>
           </p>
         </form>
       </div>

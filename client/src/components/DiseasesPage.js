@@ -1,48 +1,50 @@
 import React from "react";
 import "../styles/DiseasesPage.css";
+import { useTranslation } from "react-i18next";
 
 const diseases = [
   {
     id: 1,
-    name: "Fruit Rot",
-    image: "arecanut-disease-detection\client\Picture4.png",
-    description: "This disease affects the fruit causing it to rot and fall prematurely.",
-    treatment: "Apply Bordeaux mixture (1%) or copper oxychloride (0.25%)."
+    name: "disease1_namet",
+    image: "arecanut-disease-detection/client/Picture4.png",
+    description: "disease1_desc",
+    treatment: "disease1_treatment"
   },
   {
     id: 2,
-    name: "Bud Rot",
-    image: "arecanut-disease-detection\client\images (2).jfif",
-    description: "The central shoot decays and the spindle withers and falls.",
-    treatment: "Remove infected parts and spray 1% Bordeaux mixture or mancozeb."
+    name: "disease2_name",
+    image: "arecanut-disease-detection/client/images (2).jfif",
+    description: "disease2_desc",
+    treatment: "disease2_treatment"
   },
   {
     id: 3,
-    name: "Leaf Blight",
-    image: "arecanut-disease-detection\client\Picture2.png",
-    description: "Irregular dark brown lesions develop on leaves.",
-    treatment: "Spray fungicides like carbendazim or mancozeb at 0.2% concentration."
+    name: "disease3_name",
+    image: "arecanut-disease-detection/client/Picture2.png",
+    description: "disease3_desc",
+    treatment: "disease3_treatment"
   },
   {
     id: 4,
-    name: "Stem Bleeding",
-    image: "arecanut-disease-detection\client\Picture3.png",
-    description: "Dark brown patches and bleeding on stem surface.",
-    treatment: "Scrape the affected area and apply Bordeaux paste or coal tar."
+    name: "disease4_name",
+    image: "arecanut-disease-detection/client/Picture3.png",
+    description: "disease4_desc",
+    treatment: "disease4_treatment"
   }
 ];
 
 function DiseasesPage() {
+  const { t } = useTranslation()
   return (
     <div className="diseases-container">
-      <h2>Common Arecanut Diseases</h2>
+      <h2>{t("common_diseases")}</h2>
       <div className="disease-grid">
         {diseases.map((disease) => (
           <div key={disease.id} className="disease-card">
-            <img src={disease.image} alt={disease.name} />
-            <h3>{disease.name}</h3>
-            <p>{disease.description}</p>
-            <strong>Treatment: {disease.treatment}</strong>
+            <img src={disease.image} alt={t(disease.nameKey)} />
+            <h3>{t(disease.nameKey)}</h3>
+            <p>{t(disease.descriptionKey)}</p>
+            <strong>{t("Treatment")}: {t(disease.treatmentKey)}</strong>
           </div>
         ))}
       </div>
