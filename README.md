@@ -2,7 +2,7 @@
 
 
 
-**Areca_Health_Vision** is an AI-based web application designed to detect multiple diseases in **arecanut plants** at various growth stages. It helps farmers and researchers identify diseases early, recommends suitable pesticides or insecticides, and visualizes model decisions using Explainable AI (XAI) techniques.
+**Areca_Health_Vision** is an AI-based web application designed to detect multiple diseases in **arecanut plants** at various growth stages. It helps farmers and researchers identify diseases early, recommends suitable pesticides or insecticides, and visualizes model decisions using Explainable AI techniques.
 
 ---
 
@@ -58,7 +58,7 @@ It consists of two major detection steps:
 ![Home Page](ps3.png)
 
 ### 2. Disease Detection Result
-![Detection Result](.ps1.png)
+![Detection Result](ps1.png)
 
 ### 3. Recommendation module
 ![Recommendation module](ps2.png)
@@ -75,3 +75,4 @@ Backend API (Node.js)
 ML Model (Python - Flask)
       ↓
 Database (MongoDB)
+
