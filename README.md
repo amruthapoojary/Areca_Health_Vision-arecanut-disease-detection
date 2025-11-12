@@ -76,3 +76,4 @@ ML Model (Python - Flask)
       ↓
 Database (MongoDB)
 
+
