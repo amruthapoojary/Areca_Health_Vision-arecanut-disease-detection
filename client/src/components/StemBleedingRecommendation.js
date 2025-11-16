@@ -115,22 +115,6 @@ function StemBleedingRecommendation() {
         {t("stem_bleeding.description")} <em>Ganoderma lucidum</em>.
       </p>
 
-      <button
-        onClick={toggleAudio}
-        style={{
-          margin: "20px 0",
-          padding: "10px 20px",
-          backgroundColor: isPlaying ? "#B22222" : "#006400",
-          color: "white",
-          borderRadius: "8px",
-          fontWeight: "bold",
-          cursor: "pointer",
-          boxShadow: "0 3px 6px rgba(0,0,0,0.2)"
-        }}
-      >
-        {isPlaying ? t("audio.pause") : t("audio.play")}
-      </button>
-
       <div className="card-grid">
         {cards.map((card) => (
           <div key={card.key} className="recommendation-card">

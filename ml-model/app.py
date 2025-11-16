@@ -11,7 +11,6 @@ import cv2
 import numpy as np
 from skimage.feature import graycomatrix, graycoprops
 
-
 # ------------------------------------------------
 # Flask Setup
 # ------------------------------------------------
@@ -21,7 +20,7 @@ CORS(app)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # ------------------------------------------------
-# Create Save Directory for Uploaded Files
+# Create Save Directory
 # ------------------------------------------------
 SAVE_DIR = "uploaded_images"
 os.makedirs(SAVE_DIR, exist_ok=True)
@@ -31,32 +30,32 @@ os.makedirs(SAVE_DIR, exist_ok=True)
 # ------------------------------------------------
 models = {}
 
-# Part Detection Model
+# Part Model
 models['part'] = timm.create_model('deit3_small_patch16_224', pretrained=False, num_classes=4)
 models['part'].load_state_dict(torch.load('models/part_classifier_best.pth', map_location=device))
 models['part'].to(device).eval()
 part_classes = ['Fruit', 'Leaf', 'Trunk', 'not_areca']
 
-# Leaf Disease Model
+# Leaf Model
 models['leaf'] = timm.create_model('deit3_small_patch16_224', pretrained=False, num_classes=2)
 models['leaf'].load_state_dict(torch.load('models/best_leaf_model.pth', map_location=device))
 models['leaf'].to(device).eval()
 leaf_classes = ['Healthy_Leaf', 'Yellow_leaf_disease']
 
-# Fruit Disease Model
+# Fruit Model
 models['fruit'] = timm.create_model('deit3_small_patch16_224', pretrained=False, num_classes=2)
 models['fruit'].load_state_dict(torch.load('models/best_fruit_model.pth', map_location=device))
 models['fruit'].to(device).eval()
 fruit_classes = ['Fruit_rot', 'Healthy_Fruit']
 
-# Trunk Disease Model
+# Trunk Model
 models['trunk'] = timm.create_model('deit3_small_patch16_224', pretrained=False, num_classes=2)
 models['trunk'].load_state_dict(torch.load('models/best_trunk_model.pth', map_location=device))
 models['trunk'].to(device).eval()
 trunk_classes = ['Healthy_Trunk', 'Stem_bleeding']
 
 # ------------------------------------------------
-# Transform for Model Input
+# Transform
 # ------------------------------------------------
 transform = transforms.Compose([
     transforms.Resize((224, 224)),
@@ -66,35 +65,27 @@ transform = transforms.Compose([
 ])
 
 # ------------------------------------------------
-# Feature Extraction Function (Real Values)
+# Feature Extraction
 # ------------------------------------------------
 def extract_real_features(img_path):
     img = cv2.imread(img_path)
     img = cv2.resize(img, (224, 224))
 
-    # --- 1. Color Variation (std deviation of saturation channel) ---
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     color_variation = np.std(hsv[:, :, 1])
 
-    # --- 2. Texture Pattern (GLCM contrast) ---
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     glcm = graycomatrix(gray, distances=[5], angles=[0], levels=256, symmetric=True, normed=True)
     texture_pattern = graycoprops(glcm, 'contrast')[0, 0]
-  
 
-    # --- 3. Shape Consistency (edge density) ---
     edges = cv2.Canny(gray, 100, 200)
     shape_consistency = np.sum(edges > 0) / (224 * 224) * 100
 
-    # --- 4. Spot Density (dark patch ratio) ---
     _, thresh = cv2.threshold(gray, 60, 255, cv2.THRESH_BINARY_INV)
     spot_density = np.sum(thresh > 0) / (224 * 224) * 100
 
-    # Normalize to 0–100 range
     color_variation = np.clip(color_variation / 50 * 100, 0, 100)
     texture_pattern = np.clip(texture_pattern / 50 * 100, 0, 100)
-    shape_consistency = np.clip(shape_consistency, 0, 100)
-    spot_density = np.clip(spot_density, 0, 100)
 
     return [
         {"feature": "Color Variation", "weight": float(color_variation)},
@@ -104,21 +95,22 @@ def extract_real_features(img_path):
     ]
 
 # ------------------------------------------------
-# Helper Function for Predictions
+# Prediction Helper
 # ------------------------------------------------
 def predict_with_probs(model, classes, image):
-    """Return label, confidence (0–1), and all class probabilities"""
     img_tensor = transform(image).unsqueeze(0).to(device)
     with torch.no_grad():
         outputs = model(img_tensor)
         probs = torch.softmax(outputs, dim=1).cpu().numpy()[0]
+
     conf = float(probs.max())
     pred_label = classes[int(probs.argmax())]
     prob_list = [{"label": classes[i], "prob": float(probs[i])} for i in range(len(classes))]
+
     return pred_label, conf, prob_list
 
 # ------------------------------------------------
-# Main Prediction Route (Full JSON for Frontend)
+# PREDICT API
 # ------------------------------------------------
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -128,45 +120,33 @@ def predict():
     file = request.files['file']
     img_path = os.path.join(SAVE_DIR, file.filename)
     file.save(img_path)
+
     image = Image.open(file.stream).convert('RGB')
 
-    # Step 1: Identify part (Fruit / Leaf / Trunk / not_areca)
     part, part_conf, part_probs = predict_with_probs(models['part'], part_classes, image)
-
-    # Compute part confidence dictionary for radar chart
     part_confidences = {part_classes[i]: float(part_probs[i]['prob']) for i in range(len(part_classes))}
 
     if part == 'not_areca':
         return jsonify({
             'prediction': 'not_areca',
-            'confidence': round(part_conf, 4),
-            'part': part,
-            'part_confidence': round(part_conf, 4),
-            'part_probs': part_probs,
+            'part': 'not_areca',
+            'confidence': part_conf,
             'condition_probs': [],
             'feature_importance': [],
             'disease_risk': 0,
-            'part_confidences': part_confidences,
-            'message': 'This image does not belong to an arecanut plant.'
+            'part_confidences': part_confidences
         })
 
-    # Step 2: Disease detection
     if part == 'Leaf':
         disease, conf, cond_probs = predict_with_probs(models['leaf'], leaf_classes, image)
     elif part == 'Fruit':
         disease, conf, cond_probs = predict_with_probs(models['fruit'], fruit_classes, image)
-    elif part == 'Trunk':
-        disease, conf, cond_probs = predict_with_probs(models['trunk'], trunk_classes, image)
     else:
-        disease, conf, cond_probs = 'Unknown', 0, []
+        disease, conf, cond_probs = predict_with_probs(models['trunk'], trunk_classes, image)
 
-    # Step 3: Extract visual feature importance
     features = extract_real_features(img_path)
-
-    # Step 4: Disease risk (simple derived metric)
     disease_risk = round(conf * 0.8 + part_conf * 0.2, 4)
 
-    # Step 5: Label mapping for frontend
     disease_map = {
         'Healthy_Leaf': 'healthy_leaf',
         'Yellow_leaf_disease': 'diseased_leaf',
@@ -175,13 +155,14 @@ def predict():
         'Healthy_Trunk': 'healthy_stem',
         'Stem_bleeding': 'diseased_stem'
     }
-    prediction_key = disease_map.get(disease, 'unknown')
+
+    prediction_key = disease_map.get(disease, "unknown")
 
     return jsonify({
         'prediction': prediction_key,
-        'confidence': round(conf, 4),
+        'confidence': conf,
         'part': part,
-        'part_confidence': round(part_conf, 4),
+        'part_confidence': part_conf,
         'part_probs': part_probs,
         'condition_probs': cond_probs,
         'feature_importance': features,
@@ -190,65 +171,82 @@ def predict():
     })
 
 # ------------------------------------------------
-# Short Recommendation Audio
+# SHORT AUDIO API
 # ------------------------------------------------
 @app.route('/recommendation_audio', methods=['POST'])
 def recommendation_audio():
     data = request.get_json()
-    disease = data.get('condition', 'Healthy')
+    disease_type = data.get('condition', 'healthy_leaf')
 
     text_dict = {
-        'Yellow_leaf_disease': "Yellow leaf disease is affecting your arecanut leaves.",
-        'Fruit_rot': "Fruit rot has been detected on your arecanut.",
-        'Stem_bleeding': "Stem bleeding symptoms found on the trunk.",
-        'Healthy_Leaf': "The leaf looks green and healthy.",
-        'Healthy_Fruit': "The fruit appears healthy.",
-        'Healthy_Trunk': "The trunk looks healthy and strong."
+        "not_areca": "This is not an arecanut plant.",
+        "healthy_leaf": "The leaf looks healthy.",
+        "diseased_leaf": "Yellow leaf disease detected on the leaf.",
+        "healthy_fruit": "The fruit is healthy.",
+        "diseased_fruit": "Fruit rot detected on the arecanut.",
+        "healthy_stem": "The trunk is healthy.",
+        "diseased_stem": "Stem bleeding detected on the trunk."
     }
 
-    text = text_dict.get(disease, "This arecanut part looks healthy.")
+    text = text_dict.get(disease_type, "The plant part appears normal.")
+
     tts = gTTS(text=text, lang='en')
     audio_bytes = io.BytesIO()
     tts.write_to_fp(audio_bytes)
     audio_bytes.seek(0)
+
     return send_file(audio_bytes, mimetype='audio/mpeg', download_name='recommendation.mp3')
 
 # ------------------------------------------------
-# Detailed Recommendation Audio
+# DETAILED AUDIO API
 # ------------------------------------------------
 @app.route('/detailed_recommendation_audio', methods=['POST'])
 def detailed_recommendation_audio():
     data = request.get_json()
-    disease = data.get('condition', 'Healthy')
+    model_prediction = data.get("prediction", None)
+
+    if model_prediction is None:
+        model_prediction = "healthy_leaf"
 
     text_dict = {
-        'Yellow_leaf_disease': (
-            "Yellow leaf disease is caused by nutrient deficiency and poor soil drainage. "
-            "Maintain good soil nutrition and apply fertilizers like urea and potash as recommended."
-        ),
-        'Fruit_rot': (
-            "Fruit rot, also called Koleroga, is caused by Phytophthora palmivora. "
-            "Spray one percent Bordeaux mixture or Ridomil Gold. Remove infected nuts and improve drainage."
-        ),
-        'Stem_bleeding': (
-            "Stem bleeding is caused by Ganoderma fungus. "
-            "Remove infected tissues and apply Trichoderma paste or Bordeaux mixture to the wound. "
-            "Avoid water stagnation around the plant base."
-        ),
-        'Healthy_Leaf': "The leaf is healthy; maintain regular irrigation and pest monitoring.",
-        'Healthy_Fruit': "The fruit is healthy; continue proper fertilization and pest control.",
-        'Healthy_Trunk': "The trunk is healthy; maintain good plantation hygiene."
+
+        "not_areca":
+        "This image does not belong to an arecanut plant. Upload a valid arecanut leaf, fruit or trunk image.",
+
+        "healthy_leaf":
+        "The leaf is healthy. Maintain proper irrigation, follow fertilizer schedule, and monitor regularly.",
+
+        "diseased_leaf":
+        "Yellow leaf disease detected. It is caused due to nutrient deficiency and poor soil aeration. "
+        "Apply urea, potash, and micronutrients. Improve soil drainage.",
+
+        "healthy_fruit":
+        "The fruit is healthy. Avoid water stagnation and follow good farm hygiene.",
+
+        "diseased_fruit":
+        "Fruit rot detected. This is caused by Phytophthora fungi. "
+        "Spray one percent Bordeaux mixture, remove infected nuts, and improve drainage.",
+
+        "healthy_stem":
+        "The trunk is healthy. Maintain good drainage and plantation hygiene.",
+
+        "diseased_stem":
+        "Stem bleeding detected. This is caused by Ganoderma fungus. "
+        "Remove infected tissue, apply Trichoderma paste, and avoid excess water near the root zone."
     }
 
-    text = text_dict.get(disease, "This arecanut part is healthy and does not require treatment.")
+    text = text_dict.get(model_prediction, "No disease found.")
+
     tts = gTTS(text=text, lang='en')
     audio_bytes = io.BytesIO()
     tts.write_to_fp(audio_bytes)
     audio_bytes.seek(0)
-    return send_file(audio_bytes, mimetype='audio/mpeg', download_name='detailed_recommendation.mp3')
+
+    return send_file(audio_bytes, mimetype='audio/mpeg',
+                     download_name='detailed_recommendation.mp3')
 
 # ------------------------------------------------
-# Run Flask
+# Run Server
 # ------------------------------------------------
 if __name__ == '__main__':
     app.run(debug=True, port=5001)

@@ -66,22 +66,7 @@ function FruitRotRecommendation() {
         {t("fruit_rot.description")} <em>Phytophthora palmivora</em>. {t("fruit_rot.description2")}
       </p>
 
-      {/* Play/Pause Audio Button */}
-      <button
-        onClick={toggleAudio}
-        style={{
-          margin: "20px 0",
-          padding: "10px 20px",
-          backgroundColor: isPlaying ? "#B22222" : "#006400",
-          color: "white",
-          borderRadius: "8px",
-          fontWeight: "bold",
-          cursor: "pointer",
-          boxShadow: "0 3px 6px rgba(0,0,0,0.2)"
-        }}
-      >
-        {isPlaying ? t("common.pause_audio") : t("common.play_audio")}
-      </button>
+      
 
       {/* Recommendation Cards */}
       <div className="card-grid">

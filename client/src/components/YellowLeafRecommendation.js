@@ -65,22 +65,7 @@ function YellowLeafRecommendation() {
       <h2>{t("recommendation.title")}</h2>
       <p className="disease-description">{t("recommendation.description")}</p>
 
-      {/* Play/Pause Audio Button */}
-      <button
-        onClick={toggleAudio}
-        style={{
-          margin: "20px 0",
-          padding: "10px 20px",
-          backgroundColor: isPlaying ? "#B22222" : "#006400",
-          color: "white",
-          borderRadius: "8px",
-          fontWeight: "bold",
-          cursor: "pointer",
-          boxShadow: "0 3px 6px rgba(0,0,0,0.2)"
-        }}
-      >
-        {isPlaying ? t("recommendation.pause_audio") : t("recommendation.play_audio")}
-      </button>
+      
 
       {/* Recommendation Cards */}
       <div className="card-grid">
