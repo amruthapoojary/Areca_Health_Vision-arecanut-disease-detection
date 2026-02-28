@@ -8,3 +8,4 @@ dataset/
 *.tar
 *.7z
 *.rar
+*.env
