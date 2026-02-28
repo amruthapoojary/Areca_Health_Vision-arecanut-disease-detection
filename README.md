@@ -1,4 +1,4 @@
-#﻿# Areca_Health_Vision - A Smart System for Arecanut Crop Disease Detection
+Areca_Health_Vision - A Smart System for Arecanut Crop Disease Detection
 
 
 
@@ -75,5 +75,6 @@ Backend API (Node.js)
 ML Model (Python - Flask)
       ↓
 Database (MongoDB)
+
 
 
