@@ -74,7 +74,7 @@ Backend API (Node.js)
       ↓
 ML Model (Python - Flask)
       ↓
-Database (MongoDB)
+Database (MySQL)
 
 
 
